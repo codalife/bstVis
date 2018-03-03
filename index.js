@@ -1,14 +1,3 @@
-const head = document.querySelector('#bst');
-
-const headNode = document.createElement('div');
-
-const tree = [null];
-
-headNode.className = 'node';
-headNode.innerText = tree[0] || 'null';
-
-head.appendChild(headNode);
-
 class Node {
   constructor(value) {
     this.value = value;
@@ -31,9 +20,6 @@ class BST {
       }
       return new Node(val);
     }
-    // if (val === 5) {
-    //   debugger;
-    // }
     if (current.value > val) {
       current.left = this.insert(val, current.left);
     } else if (current.value < val) {
@@ -60,7 +46,6 @@ class BST {
     };
 
     heapInsert(this.head);
-    // return heap;
   }
 
   traverse(callback, current = this.head) {
@@ -74,21 +59,27 @@ class BST {
     }
   }
   visualize() {
-    let level = 0;
-    // while (2 ** level < this.)
+    const parent = document.getElementById('bst');
+    const levels = new Set();
+    let currentHolder;
+    let currentNode;
 
-    const render = (level = 1) => {
-      const htmlNode = document.createElement('div');
-      htmlNode.className = 'node';
-      htmlNode.setAttribute('top', 20 * level + 'rem');
-      headNode.innerText = current.value;
+    this.heap.forEach((node, index) => {
+      const currentLevel = Math.ceil(Math.log2(index + 2));
+      console.log(`level: ${currentLevel}`);
 
-      const headHtmlNode = document.querySelector('#bst');
+      if (node && !levels.has(currentLevel)) {
+        currentHolder = document.createElement('div');
+        currentHolder.className = 'holder';
+        parent.appendChild(currentHolder);
+        levels.add(currentLevel);
+      }
 
-      headHtmlNode.appendChild(htmlNode);
-    };
-
-    this.traverse(render);
+      currentNode = document.createElement('div');
+      currentNode.className = 'node';
+      currentNode.innerText = node;
+      currentHolder.appendChild(currentNode);
+    });
   }
 }
 
@@ -102,5 +93,6 @@ testBST.insert(12);
 testBST.insert(17);
 
 testBST.heapify();
+testBST.visualize();
 
-console.log(testBST.heap);
+console.table(testBST.heap);

@@ -1,12 +1,18 @@
 #bst {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  background-color: coral;
 }
 
 .node {
+  font-size: 1rem;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
+  border: 0.2rem solid white;
   background-color: aquamarine;
   display: flex;
   align-items: center;
@@ -15,4 +21,14 @@
 
 .null {
   background-color: blueviolet;
+}
+
+.holder {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem;
+  height: 5rem;
+  /* background-color: blueviolet; */
+  /* border: 1px solid white; */
 }
