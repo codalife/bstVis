@@ -1,0 +1,18 @@
+#bst {
+  display: flex;
+  justify-content: center;
+}
+
+.node {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background-color: aquamarine;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.null {
+  background-color: blueviolet;
+}
