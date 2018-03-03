@@ -1,3 +1,7 @@
+document.addEventListener('DOMContentLoaded', function(event) {
+  console.log('DOM fully loaded and parsed');
+});
+
 class Node {
   constructor(value) {
     this.value = value;
@@ -25,6 +29,61 @@ class BST {
     } else if (current.value < val) {
       current.right = this.insert(val, current.right);
     }
+
+    const rightHeight = current.right ? current.right.height : 0;
+    const leftHeight = current.left ? current.left.height : 0;
+
+    if (leftHeight - rightHeight > 1) {
+      console.log(
+        `getting off balance at node ${current.value} with diff ${leftHeight -
+          rightHeight}`,
+      );
+      if (
+        this.getLeftHeight(current.left) >= this.getRightHeight(current.left)
+      ) {
+        // LL
+        let temp = current.left;
+        current.left = current.left.right;
+        temp.right = current;
+        current.height -= 1;
+        temp.height += 1;
+        if (current === this.head) {
+          this.head = temp;
+        } else {
+          current = temp;
+        }
+      } else {
+        let temp = ([current.left, current.left.left] = [
+          current.left.right,
+          current.left,
+        ]);
+        [current, current.left, current.right] = [
+          current.left,
+          current.left.left,
+          current,
+        ];
+      }
+    } else if (rightHeight - leftHeight > 1) {
+      console.log(
+        `getting off balance at node ${current.value} with diff ${rightHeight -
+          leftHeight}`,
+      );
+      if (
+        this.getLeftHeight(current.right) < this.getRightHeight(current.right)
+      ) {
+        console.log(`doing magic`);
+        let temp = current.right;
+        current.right = current.right.left;
+        temp.left = current;
+        current.height -= 1;
+        temp.height += 1;
+        if (this.head === current) {
+          this.head = temp;
+        } else {
+          current = temp;
+        }
+      }
+    }
     current.height =
       Math.max(
         current.right ? current.right.height : 0,
@@ -33,8 +92,15 @@ class BST {
     return current;
   }
 
+  getLeftHeight(node) {
+    return node.left ? node.left.height : 0;
+  }
+  getRightHeight(node) {
+    return node.right ? node.right.height : 0;
+  }
+
   heapify() {
-    this.heap = new Array(2 ** this.head.height).fill(null);
+    this.heap = new Array(2 ** this.head.height - 1).fill(null);
 
     const heapInsert = (node, index = 0) => {
       if (!node) {
@@ -60,23 +126,22 @@ class BST {
   }
   visualize() {
     const parent = document.getElementById('bst');
+    parent.innerHTML = '';
     const levels = new Set();
+    let currentLevel = 0;
     let currentHolder;
     let currentNode;
 
     this.heap.forEach((node, index) => {
-      const currentLevel = Math.ceil(Math.log2(index + 2));
-      console.log(`level: ${currentLevel}`);
-
-      if (node && !levels.has(currentLevel)) {
+      if (index + 1 >= 2 ** currentLevel) {
         currentHolder = document.createElement('div');
         currentHolder.className = 'holder';
         parent.appendChild(currentHolder);
-        levels.add(currentLevel);
+        currentLevel += 1;
       }
 
       currentNode = document.createElement('div');
-      currentNode.className = 'node';
+      currentNode.className = node ? 'node filled' : 'node null';
       currentNode.innerText = node;
       currentHolder.appendChild(currentNode);
     });
@@ -84,15 +149,43 @@ class BST {
 }
 
 const testBST = new BST();
-testBST.insert(10);
-testBST.insert(15);
-testBST.insert(7);
-testBST.insert(8);
-testBST.insert(5);
-testBST.insert(12);
-testBST.insert(17);
+// testBST.insert(3);
+// testBST.insert(12);
+// testBST.insert(14);
+// testBST.insert(16);
+// testBST.insert(7);
+// testBST.insert(9);
+// testBST.insert(5);
+// testBST.insert(19);
+// testBST.insert(20);
+// testBST.insert(6);
+// testBST.insert(8);
+// testBST.insert(10);
+// testBST.insert(13);
+// testBST.insert(15);
+// testBST.insert(17);
 
-testBST.heapify();
-testBST.visualize();
+// const insertions = [
+//   testBST.insert(8),
+//   testBST.insert(5),
+//   testBST.insert(3),
+//   testBST.insert(2),
+//   testBST.insert(1),
+//   testBST.insert(-1),
+// ];
 
-console.table(testBST.heap);
+const nums = [8, 10, 12];
+
+let start = 0;
+
+nums.forEach((num, index) => {
+  setTimeout(() => {
+    console.log(index * 2000);
+    testBST.insert(num);
+    testBST.heapify();
+    testBST.visualize();
+  }, 2000 * index);
+});
+
+console.log(testBST.head);
+console.table(testBST.head);

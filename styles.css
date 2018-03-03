@@ -8,19 +8,22 @@
 .node {
   font-size: 1rem;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
   border: 0.2rem solid white;
-  background-color: aquamarine;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.filled {
+  background-color: aquamarine;
+}
+
 .null {
   background-color: blueviolet;
+  content: 'null';
 }
 
 .holder {
