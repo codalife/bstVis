@@ -17,6 +17,28 @@ class BST {
     this.size = 0;
     this.heap = [];
   }
+  rotateLeft(node) {
+    let temp = node.right;
+    node.right = node.right.left;
+    temp.left = node;
+    node.height -= 1;
+    temp.height += 1;
+    if (this.head === node) {
+      this.head = temp;
+    }
+    return temp;
+  }
+  rotateRight(node) {
+    let temp = node.left;
+    node.left = node.left.right;
+    temp.right = node;
+    node.height -= 1;
+    temp.height += 1;
+    if (node === this.head) {
+      this.head = temp;
+    }
+    return temp;
+  }
   insert(val, current = this.head) {
     if (!current) {
       if (!this.head) {
@@ -42,26 +64,10 @@ class BST {
         this.getLeftHeight(current.left) >= this.getRightHeight(current.left)
       ) {
         // LL
-        let temp = current.left;
-        current.left = current.left.right;
-        temp.right = current;
-        current.height -= 1;
-        temp.height += 1;
-        if (current === this.head) {
-          this.head = temp;
-        } else {
-          current = temp;
-        }
+        current = this.rotateRight(current);
       } else {
-        let temp = ([current.left, current.left.left] = [
-          current.left.right,
-          current.left,
-        ]);
-        [current, current.left, current.right] = [
-          current.left,
-          current.left.left,
-          current,
-        ];
+        current = this.rotateLeft(current);
+        current = this.rotateRight(current);
       }
     } else if (rightHeight - leftHeight > 1) {
       console.log(
@@ -71,17 +77,10 @@ class BST {
       if (
         this.getLeftHeight(current.right) < this.getRightHeight(current.right)
       ) {
-        console.log(`doing magic`);
-        let temp = current.right;
-        current.right = current.right.left;
-        temp.left = current;
-        current.height -= 1;
-        temp.height += 1;
-        if (this.head === current) {
-          this.head = temp;
-        } else {
-          current = temp;
-        }
+        current = this.rotateLeft(current);
+      } else {
+        current = this.rotateRight(current);
+        current = this.rotateLeft(current);
       }
     }
     current.height =
@@ -174,18 +173,32 @@ const testBST = new BST();
 //   testBST.insert(-1),
 // ];
 
-const nums = [8, 10, 12];
+const nums = [8, 25, 124, -14, 16, 118, -20, 22, 24];
+console.log(`the length is ${nums.length}`);
+console.log(nums.slice().sort((a, b) => a - b));
 
 let start = 0;
 
-nums.forEach((num, index) => {
-  setTimeout(() => {
-    console.log(index * 2000);
-    testBST.insert(num);
-    testBST.heapify();
-    testBST.visualize();
-  }, 2000 * index);
-});
+// nums.forEach((num, index) => {
+//   setTimeout(() => {
+//     testBST.insert(num);
+//     testBST.heapify();
+//     testBST.visualize();
+//   }, 2000 * index);
+// });
 
 console.log(testBST.head);
 console.table(testBST.head);
+
+let count = 0;
+
+while (count < 30) {
+  const random = Math.floor(Math.random() * 1000);
+
+  setTimeout(() => {
+    testBST.insert(random);
+    testBST.heapify();
+    testBST.visualize();
+  }, count * 1000);
+  count += 1;
+}
